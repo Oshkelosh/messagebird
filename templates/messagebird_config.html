@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% from "_macros.html" import csrf_field with context %}
+
+{% block title %}MessageBird Settings{% endblock %}
+
+{% block content %}
+<h1>MessageBird SMS</h1>
+
+<div class="card">
+    <h2>Configuration</h2>
+    {% if config %}
+    <div class="alert alert--info" style="margin-bottom:1em;">
+        <strong>Status:</strong> {% if addon and addon.is_enabled %}Enabled{% else %}Disabled{% endif %}
+    </div>
+    {% endif %}
+
+    <form method="post" action="/admin/notifications/messagebird/save" class="form">
+        {{ csrf_field() }}
+        <div class="form-group">
+            <label for="access_key">Access Key</label>
+            <input type="password" id="access_key" name="access_key"
+                   value="{{ config.get('access_key', '') }}" />
+        </div>
+        <div class="form-group">
+            <label for="originator">Originator</label>
+            <input type="text" id="originator" name="originator"
+                   value="{{ config.get('originator', '') }}"
+                   placeholder="YourBrand or +15551234567" />
+        </div>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="is_enabled" {% if addon and addon.is_enabled %}checked{% endif %} />
+                Only one provider per channel can be enabled at a time.
+            </label>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="btn btn--primary">Save Configuration</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
